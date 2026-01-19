@@ -18,7 +18,7 @@ st.markdown("Comprehensive analysis of Aadhaar **Enrollment, Demographics & Biom
 def load_data():
     enrol = pd.read_csv("cleaned_data_enrol.csv")
     demo = pd.read_csv("demographic_cleaned.csv")
-    bio = pd.read_csv("AAdhar_Biometric_data.csv",compression="gzip")
+    bio = pd.read_csv("biometric_data.csv")
     return enrol, demo, bio
 
 enrol_df, demo_df, bio_df = load_data()
@@ -27,7 +27,7 @@ st.sidebar.header("Choose your preference:")
 
 dataset = st.sidebar.radio(
     "Choose:",
-    ["Enrollment Analytics", "Demographics Analytics", "Biometrics Analytics", "Solution: Early Warning System"]
+    ["Enrollment Analytics", "Demographics Analytics", "Biometrics Analytics","Enrollment Forecast" ,"Solution: Early Warning System"]
 )
 
 if dataset == "Enrollment Analytics":
@@ -284,15 +284,46 @@ elif dataset == "Biometrics Analytics":
     )
     st.plotly_chart(fig_scatter, use_container_width=True)
 
+elif dataset == "Enrollment Forecast":
+    st.title("📈 Enrollment Forecast")
+
+    forecast = pd.read_csv("enrollment_forecast.csv")
+    forecast['date'] = pd.to_datetime(forecast['date'])
+
+    avg_pred = int(forecast['predicted_enrolments'].mean())
+    peak_pred = int(forecast['predicted_enrolments'].max())
+
+    col1, col2 = st.columns(2)
+    col1.metric("Avg Predicted Enrollments", avg_pred)
+    col2.metric("Peak Predicted Enrollments", peak_pred)
+
+    st.line_chart(
+        forecast.set_index('date')['predicted_enrolments']
+    )
+    peak_pred = forecast['predicted_enrolments'].max()
+
+    historical = enrol_df.groupby('date')['total_enrolments'].sum().reset_index()
+    historical_avg = historical['total_enrolments'].mean()
+
+    threshold = historical_avg * 1.3  # 30% surge threshold
+
+    st.subheader("⚠️ Enrollment Surge Detection")
+
+    if peak_pred > threshold:
+        st.error("🚨 Predicted enrollment surge detected. Advance planning recommended.")
+    else:
+        st.success("✅ Enrollment levels expected to remain stable.")
+
+
 else: 
-    # st.set_page_config(page_title="Aadhaar Early Warning System", layout="wide")
+    st.set_page_config(page_title="Aadhaar Early Warning System", layout="wide")
     st.title("🚨 Aadhaar Early-Warning & Quality Monitoring System 🚨")
 
     @st.cache_data
     def load_data():
         enrol = pd.read_csv("cleaned_data_enrol.csv")
         demo = pd.read_csv("demographic_cleaned.csv")
-        bio = pd.read_csv("AAdhar_Biometric_data.csv",compression="gzip")
+        bio = pd.read_csv("Biometric_data.csv")
         enrol = clean_columns(enrol)
         demo = clean_columns(demo)
         bio = clean_columns(bio)
