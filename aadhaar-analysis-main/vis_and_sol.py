@@ -17,8 +17,8 @@ st.markdown("Comprehensive analysis of Aadhaar **Enrollment, Demographics & Biom
 @st.cache_data
 def load_data():
     enrol = pd.read_csv("cleaned_data_enrol.csv")
-    demo = pd.read_csv("demographic_cleaned.csv")
-    bio = pd.read_csv("biometric_data.csv")
+    demo = pd.read_csv("dataset_1000_rows.csv")
+    bio = pd.read_csv("AAdhar_Biometric_data.csv", compression="gzip")
     return enrol, demo, bio
 
 enrol_df, demo_df, bio_df = load_data()
@@ -316,14 +316,14 @@ elif dataset == "Enrollment Forecast":
 
 
 else: 
-    st.set_page_config(page_title="Aadhaar Early Warning System", layout="wide")
+    # st.set_page_config(page_title="Aadhaar Early Warning System", layout="wide")
     st.title("🚨 Aadhaar Early-Warning & Quality Monitoring System 🚨")
 
     @st.cache_data
     def load_data():
         enrol = pd.read_csv("cleaned_data_enrol.csv")
-        demo = pd.read_csv("demographic_cleaned.csv")
-        bio = pd.read_csv("Biometric_data.csv")
+        demo = pd.read_csv("dataset_1000_rows.csv")
+        bio = pd.read_csv("AAdhar_Biometric_data.csv", compression="gzip")
         enrol = clean_columns(enrol)
         demo = clean_columns(demo)
         bio = clean_columns(bio)
