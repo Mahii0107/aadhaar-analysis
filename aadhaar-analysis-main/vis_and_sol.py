@@ -12,13 +12,13 @@ st.set_page_config(
 )
 
 st.title("UIDAI Aadhaar National Analytics Dashboard and Early Warning system📊")
-st.markdown("Comprehensive analysis of Aadhaar **Enrollment, Demographics & Biometrics** across India")
+# st.markdown("Comprehensive analysis of Aadhaar **Enrollment, Demographics & Biometrics** across India")
 
 @st.cache_data
 def load_data():
     enrol = pd.read_csv("cleaned_data_enrol.csv")
-    demo = pd.read_csv("dataset_1000_rows.csv")
-    bio = pd.read_csv("AAdhar_Biometric_data.csv", compression="gzip")
+    demo = pd.read_csv("demographic_cleaned.csv")
+    bio = pd.read_csv("biometric_data.csv")
     return enrol, demo, bio
 
 enrol_df, demo_df, bio_df = load_data()
@@ -31,7 +31,7 @@ dataset = st.sidebar.radio(
 )
 
 if dataset == "Enrollment Analytics":
-
+    st.markdown("Comprehensive analysis of Aadhaar **Enrollment** across India")
     df = enrol_df.copy()
     df["date"] = pd.to_datetime(df["date"])
 
@@ -142,6 +142,7 @@ if dataset == "Enrollment Analytics":
         st.plotly_chart(fig, use_container_width=True)
 
 elif dataset == "Demographics Analytics":
+    st.markdown("Comprehensive analysis of Aadhaar **Demographics** data across India")
     df = demo_df.copy()
     st.sidebar.header("Filters")
 
@@ -207,6 +208,7 @@ elif dataset == "Demographics Analytics":
     st.plotly_chart(fig_tree, use_container_width=True)
 
 elif dataset == "Biometrics Analytics":
+    st.markdown("Comprehensive analysis of Aadhaar **Biometrics** data across India")
     df = bio_df.copy()
     st.sidebar.header("Filters")
     states = st.sidebar.multiselect("Select State", df["state_final"].unique())
@@ -316,14 +318,14 @@ elif dataset == "Enrollment Forecast":
 
 
 else: 
-    # st.set_page_config(page_title="Aadhaar Early Warning System", layout="wide")
+    st.set_page_config(page_title="Aadhaar Early Warning System", layout="wide")
     st.title("🚨 Aadhaar Early-Warning & Quality Monitoring System 🚨")
 
     @st.cache_data
     def load_data():
         enrol = pd.read_csv("cleaned_data_enrol.csv")
-        demo = pd.read_csv("dataset_1000_rows.csv")
-        bio = pd.read_csv("AAdhar_Biometric_data.csv", compression="gzip")
+        demo = pd.read_csv("demographic_cleaned.csv")
+        bio = pd.read_csv("Biometric_data.csv")
         enrol = clean_columns(enrol)
         demo = clean_columns(demo)
         bio = clean_columns(bio)
